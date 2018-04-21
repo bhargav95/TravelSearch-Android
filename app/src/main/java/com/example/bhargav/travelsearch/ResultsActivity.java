@@ -27,7 +27,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
         try{
-            JSONArray message = new JSONArray(intent.getStringExtra(MainActivity.EXTRA_MESSAGE));
+            JSONArray message = new JSONArray(intent.getStringExtra(TabSearchFragment.EXTRA_MESSAGE));
 
             // Capture the layout's TextView and set the string as its text
             //TextView textView = findViewById(R.id.resultTextView);
