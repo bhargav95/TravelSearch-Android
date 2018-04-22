@@ -28,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ResultsActivity"></activity>
+        <activity android:name=".PlaceDetailsActivity"></activity>
     </application>
 
 </manifest>

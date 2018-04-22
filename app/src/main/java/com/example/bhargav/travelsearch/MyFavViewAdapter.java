@@ -2,6 +2,8 @@ package com.example.bhargav.travelsearch;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.ViewHolder> {
 
     private JSONArray mData;
     private LayoutInflater mInflater;
@@ -31,7 +33,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        this.mData = data;
 //    }
 
-    MyRecyclerViewAdapter(Context context, JSONArray data){
+    MyFavViewAdapter(Context context, JSONArray data){
         this.mInflater = LayoutInflater.from(context);
         this.mData =  data;
         this.context = context;
@@ -71,7 +73,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final JSONObject animal = getobj(position);
         final String placeid = getanimal(animal,"place_id");
@@ -100,34 +102,21 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         holder.favicon.setOnClickListener(
                 new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onClick(View v) {
 
-                        if(Integer.parseInt(holder.favicon.getTag().toString())==0)
-                        {
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.remove(placeid);
+                        editor.commit();
+                        holder.favicon.setImageResource(R.drawable.heart_outline_black);
+                        holder.favicon.setTag(0);
 
-                            SharedPreferences.Editor editor = sharedPref.edit();
+                        Toast.makeText(v.getContext(), placename+" removed from favorites",Toast.LENGTH_SHORT).show();
 
-                            editor.putString(placeid,animal.toString());
-                            editor.commit();
+                        mData.remove(position);
+                        notifyDataSetChanged();
 
-                            holder.favicon.setImageResource(R.drawable.heart_fill_red);
-                            holder.favicon.setTag(1);
-
-                            Toast.makeText(v.getContext(), placename+" added to favorites",Toast.LENGTH_SHORT).show();
-
-                        }
-                        else
-                        {
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.remove(placeid);
-                            editor.commit();
-                            holder.favicon.setImageResource(R.drawable.heart_outline_black);
-                            holder.favicon.setTag(0);
-
-                            Toast.makeText(v.getContext(), placename+" removed from favorites",Toast.LENGTH_SHORT).show();
-
-                        }
 
                     }
                 });

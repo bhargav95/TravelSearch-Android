@@ -95,7 +95,7 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-                String url = "http://node-express-env.am4vuh8cpm.us-west-1.elasticbeanstalk.com/nearby?keyword=";
+                String url = "http://my-cloned-env.us-west-1.elasticbeanstalk.com/nearby?keyword=";
                 String key = k.getText().toString();
 
 
