@@ -36,7 +36,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         this.mData =  data;
         this.context = context;
 
-
+        this.setHasStableIds(true);
     }
 
     // inflates the row layout from xml when needed
@@ -170,6 +170,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         catch(JSONException e){
             return new JSONObject();
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     // allows clicks events to be caught

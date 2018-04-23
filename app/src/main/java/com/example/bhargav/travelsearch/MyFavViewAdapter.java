@@ -38,7 +38,7 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
         this.mData =  data;
         this.context = context;
 
-
+        this.setHasStableIds(true);
     }
 
     // inflates the row layout from xml when needed
@@ -164,6 +164,16 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     // parent activity will implement this method to respond to click events
