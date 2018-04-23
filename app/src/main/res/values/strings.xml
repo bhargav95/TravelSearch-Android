@@ -30,10 +30,25 @@
         <item>Travel Agency</item>
         <item>Zoo</item>
     </string-array>
+
     <string-array name="directionsStringArray">
         <item>Driving</item>
         <item>Bicycling</item>
         <item>Transit</item>
         <item>Walking</item>
     </string-array>
+
+    <string-array name="reviewStringArray">
+        <item>Google reviews</item>
+        <item>Yelp reviews</item>
+    </string-array>
+
+    <string-array name="sortStringArray">
+        <item>Default order</item>
+        <item>Highest rating</item>
+        <item>Lowest rating</item>
+        <item>Most recent</item>
+        <item>Least recent</item>
+    </string-array>
+
 </resources>

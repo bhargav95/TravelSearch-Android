@@ -256,8 +256,6 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         return vv;
     }
 
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
