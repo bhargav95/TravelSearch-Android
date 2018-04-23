@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -43,6 +44,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by User on 2/28/2017.
@@ -210,6 +213,16 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
             }
         });
 
+        int off = 0;
+        try {
+            off = Settings.Secure.getInt(getActivity().getContentResolver(), Settings.Secure.LOCATION_MODE);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        if(off==0){
+            Intent onGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(onGPS);
+        }
 
 
         location =view.findViewById(R.id.autoCompleteTextView);
@@ -248,7 +261,22 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
             // for ActivityCompat#requestPermissions for more details.
             return view;
         }
-        Location locationl = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //Location locationl = locationManager.getLastKnownLocation(locationManager);
+
+        List<String> providers = locationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+
+        Location locationl = bestLocation;
 
         // Initialize the location fields
         if (locationl != null) {
@@ -263,6 +291,7 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
             latituteField.setText("Location not available");
             longitudeField.setText("Location not available");
+
         }
 
         aGoogleClient = new GoogleApiClient
@@ -353,7 +382,7 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        //locationManager.requestLocationUpdates(provider, 400, 1, this);
+        locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     /* Remove the locationlistener updates when Activity is paused */

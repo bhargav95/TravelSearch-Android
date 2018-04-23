@@ -30,4 +30,10 @@
         <item>Travel Agency</item>
         <item>Zoo</item>
     </string-array>
+    <string-array name="directionsStringArray">
+        <item>Driving</item>
+        <item>Bicycling</item>
+        <item>Transit</item>
+        <item>Walking</item>
+    </string-array>
 </resources>
