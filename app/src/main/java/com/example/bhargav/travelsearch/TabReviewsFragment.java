@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ public class TabReviewsFragment extends Fragment {
 
     private ReviewRecyclerViewAdapter adapter;
     private JSONObject js;
-    private JSONArray reviews;
+    private JSONArray reviews=new JSONArray();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,8 +39,6 @@ public class TabReviewsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //adapter = new MyRecyclerViewAdapter(this, animalNames);
         adapter = new ReviewRecyclerViewAdapter(reviews);
-
-        Log.d("myTag",adapter.getItem(0).toString());
 
         recyclerView.setAdapter(adapter);
 

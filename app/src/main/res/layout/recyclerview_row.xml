@@ -1,57 +1,58 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip" >
+    android:layout_height="wrap_content"
+    android:padding="6dip">
 
     <ImageView
         android:id="@+id/imagerow"
-        android:layout_width="53dp"
-        android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
-        android:contentDescription="TODO" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="TODO"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="6dp" />
 
     <TextView
         android:id="@+id/firstLine"
-        android:layout_width="223dp"
+        android:layout_width="215dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/secondLine"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_marginRight="60dp"
-        android:layout_toRightOf="@id/imagerow"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="Example application"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imagerow"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/secondLine"
-        android:layout_width="223dp"
-        android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="60dp"
-        android:layout_toRightOf="@id/imagerow"
-        android:ellipsize="marquee"
-        android:gravity="center_vertical"
-        android:singleLine="true"
+        android:layout_width="215dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
         android:text="Description"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/imagerow"
+        app:layout_constraintTop_toBottomOf="@+id/firstLine" />
 
     <ImageView
         android:id="@+id/favicon"
         android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="18dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:onClick="favorite"
         android:src="@drawable/heart_outline_black"
-        tools:ignore="RtlCompat" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
