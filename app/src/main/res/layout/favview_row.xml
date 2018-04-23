@@ -5,7 +5,7 @@
     android:padding="6dip" >
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/imagerow"
         android:layout_width="53dp"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
@@ -22,7 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginRight="60dp"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/imagerow"
         android:text="Example application"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="60dp"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/imagerow"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
         android:singleLine="true"

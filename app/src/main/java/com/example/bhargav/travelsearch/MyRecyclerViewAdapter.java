@@ -151,7 +151,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             super(itemView);
             myTextView1 = itemView.findViewById(R.id.firstLine);
             myTextView2 = itemView.findViewById(R.id.secondLine);
-            myImageView = itemView.findViewById(R.id.icon);
+            myImageView = itemView.findViewById(R.id.imagerow);
             favicon = itemView.findViewById(R.id.favicon);
             itemView.setOnClickListener(this);
         }
