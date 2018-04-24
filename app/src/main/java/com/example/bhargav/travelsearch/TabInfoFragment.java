@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -36,9 +37,9 @@ public class TabInfoFragment extends Fragment {
 
         js = ((PlaceDetailsActivity)this.getActivity()).res;
 
-        TextView ittv = vv.findViewById(R.id.infoTabTextView);
+        //TextView ittv = vv.findViewById(R.id.infoTabTextView);
 
-        ittv.setText(js.toString());
+        //ittv.setText(js.toString());
 
         Log.d("myTag",js.toString());
 
@@ -47,6 +48,7 @@ public class TabInfoFragment extends Fragment {
         TextView gp = vv.findViewById(R.id.gpTextView);
         TextView wb = vv.findViewById(R.id.wbTextView);
         TextView price = vv.findViewById(R.id.dollarTextView);
+        RatingBar rt = vv.findViewById(R.id.infoRatingBar);
 
         String pl = getTheThing("price_level");
 
@@ -66,6 +68,8 @@ public class TabInfoFragment extends Fragment {
         price.setText(pl);
         address.setText(getTheThing("formatted_address"));
         phno.setText(getTheThing("formatted_phone_number"));
+
+        rt.setRating(Float.parseFloat(getTheThing("rating")));
 
         gp.setText(getTheThing("url"));
 

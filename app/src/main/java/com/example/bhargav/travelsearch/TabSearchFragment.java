@@ -63,6 +63,7 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
     private double lonlon;
 
     public static final String EXTRA_MESSAGE = "com.example.bhargav.travelsearch.MESSAGE";
+    public static final String TOKEN_MESSAGE = "com.example.bhargav.travelsearch.TOKEN";
 
     private GoogleApiClient aGoogleClient;
     private PlaceAutocompleteAdapter aPlaceAdapter;
@@ -153,6 +154,16 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
                                     Intent intent = new Intent(getActivity(), ResultsActivity.class);
                                     intent.putExtra(EXTRA_MESSAGE, res.toString());
+
+                                    String npt = "";
+
+                                    try{
+                                        npt = js.getString("next_page_token");
+                                    }
+                                    catch (JSONException e){
+                                        Log.d("myTag", "one pager");
+                                    }
+                                    intent.putExtra(TOKEN_MESSAGE, npt);
                                     startActivity(intent);
 
                                     pd.dismiss();

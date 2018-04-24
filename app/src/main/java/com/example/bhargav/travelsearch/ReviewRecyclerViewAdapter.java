@@ -2,10 +2,12 @@ package com.example.bhargav.travelsearch;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,10 +18,11 @@ import org.json.JSONObject;
 
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ViewHolder> {
 
-    private JSONArray mData;
+    private JSONArray mData= new JSONArray();
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
+    private Boolean isYelp=false;
 
     // data is passed into the constructor
 //    MyRecyclerViewAdapter(Context context, List<String> data) {
@@ -27,8 +30,10 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 //        this.mData = data;
 //    }
 
-    ReviewRecyclerViewAdapter(JSONArray data){
+    ReviewRecyclerViewAdapter(JSONArray data, Boolean yelpornot){
         this.mData =  data;
+
+        this.isYelp = yelpornot;
 
     }
 
@@ -69,11 +74,32 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 
         final JSONObject animal = getobj(position);
 
-        holder.nameTextView.setText(getanimal(animal,"author_name"));
-        holder.dateTextView.setText(getanimal(animal,"time"));
-        holder.reviewTextView.setText(getanimal(animal,"text"));
-        //holder.myImageView=new LoaderImageView((animal.get("icon")));
-        Picasso.with(context).load(getanimal(animal,"profile_photo_url")).into(holder.avatarImageView);
+        if(isYelp){
+            Log.d("yelpTag",String.valueOf(position));
+            try {
+                holder.nameTextView.setText(animal.getJSONObject("user").getString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            holder.dateTextView.setText(getanimal(animal,"time_created"));
+            holder.reviewTextView.setText(getanimal(animal,"text"));
+            holder.reviewRatingBar.setRating(Float.parseFloat(getanimal(animal,"rating")));
+            //holder.myImageView=new LoaderImageView((animal.get("icon")));
+            try {
+                Picasso.with(context).load(animal.getJSONObject("user").getString("image_url")).into(holder.avatarImageView);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            holder.nameTextView.setText(getanimal(animal,"author_name"));
+            holder.dateTextView.setText(getanimal(animal,"time"));
+            holder.reviewTextView.setText(getanimal(animal,"text"));
+            holder.reviewRatingBar.setRating(Float.parseFloat(getanimal(animal,"rating")));
+            //holder.myImageView=new LoaderImageView((animal.get("icon")));
+            Picasso.with(context).load(getanimal(animal,"profile_photo_url")).into(holder.avatarImageView);
+        }
+
     }
 
     // total number of rows
@@ -89,6 +115,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         TextView dateTextView;
         TextView reviewTextView;
         ImageView avatarImageView;
+        RatingBar reviewRatingBar;
 
 
         ViewHolder(View itemView) {
@@ -97,6 +124,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
             dateTextView = itemView.findViewById(R.id.dateTextView);
             reviewTextView = itemView.findViewById(R.id.reviewTextView);
             avatarImageView = itemView.findViewById(R.id.avatarImageView);
+            reviewRatingBar = itemView.findViewById(R.id.reviewRatingBar);
             itemView.setOnClickListener(this);
         }
 

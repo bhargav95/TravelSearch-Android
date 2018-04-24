@@ -31,6 +31,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -51,6 +52,9 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
     private LatLng ne,sw;
     private SupportMapFragment mapFragment;
     GoogleMap mp;
+    Marker dest;
+    private String locationhere;
+    private String locationfrom;
     private List<Polyline> pyls = new ArrayList<Polyline>();
 
     private GoogleApiClient aGoogleClient;
@@ -141,7 +145,19 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
 
                             String[] paths = getPaths(poly);
 
+
+                            JSONObject newcoordinates = js.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("start_location");
+                            Double newlat = Double.parseDouble(newcoordinates.get("lat").toString());
+                            Double newlng = Double.parseDouble(newcoordinates.get("lng").toString());
+                            LatLng delhi = new LatLng(newlat, newlng);
+
+                            if(dest!=null)
+                                dest.remove();
+                            dest = mp.addMarker(new MarkerOptions().position(delhi)
+                                    .title(js.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).get("start_address").toString()));
+
                             displaydirections(paths);
+
 
                             Log.d("myTag",paths[0]);
 
@@ -190,6 +206,13 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
             LAT_LNG_BOUNDS = llb;
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            locationhere = js.getJSONObject("result").get("name").toString();
+        } catch (JSONException e) {
+            locationhere="";
             e.printStackTrace();
         }
 
@@ -264,7 +287,7 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         // and move the map's camera to the same location.
         LatLng sydney = new LatLng(lat, lng);
         googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Marker in Sydney"));
+                .title(locationhere)).showInfoWindow();
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,17));
         //googleMap.setLatLngBoundsForCameraTarget(llb);
@@ -306,6 +329,7 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         }
 
         pyls.clear();
+
 
         for(int i=0;i<count;++i){
 
