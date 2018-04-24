@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/twitterIcon"
+        android:icon="@drawable/share"
+        android:title="Share on Twitter"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/FavActionBarIcon"
+        android:icon="@drawable/heart_outline_white"
+        android:title="Add to Favorites"
+        app:showAsAction="ifRoom" />
+
+</menu>

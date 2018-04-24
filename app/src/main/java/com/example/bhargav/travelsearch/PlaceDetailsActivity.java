@@ -1,11 +1,15 @@
 package com.example.bhargav.travelsearch;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +58,14 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.photos);
         tabLayout.getTabAt(2).setIcon(R.drawable.maps);
         tabLayout.getTabAt(3).setIcon(R.drawable.review);
+
+        try {
+            setTitle(res.getJSONObject("result").getString("name"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -63,6 +75,66 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         adapter.addFragment(new TabMapFragment(), "Map");
         adapter.addFragment(new TabReviewsFragment(), "Reviews");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.twitter_fav, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void openTwitter(){
+
+        String name = "";
+        try {
+            name = res.getJSONObject("result").getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String location = "";
+        try {
+            location = res.getJSONObject("result").getString("vicinity");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String website = "";
+        try {
+            website = res.getJSONObject("result").getString("website");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String twitterUrl = "https://twitter.com/intent/tweet?text=";
+        String text = "Check out "+name+ " located at "+location+". Website: &url=";
+        String url= website + "&hashtags=TravelAndEntertainmentSearch";
+
+        twitterUrl += text+ url;
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(twitterUrl));
+        startActivity(browserIntent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.twitterIcon:
+                openTwitter();
+                return true;
+            case R.id.FavActionBarIcon:
+                //openSettings();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

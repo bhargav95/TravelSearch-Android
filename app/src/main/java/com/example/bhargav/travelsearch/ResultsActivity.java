@@ -38,9 +38,19 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
     int currentIndex;
 
     @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        setTitle("Search Results");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         // Get the Intent that started this activity and extract the string
