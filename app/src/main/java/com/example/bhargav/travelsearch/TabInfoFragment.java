@@ -67,9 +67,10 @@ public class TabInfoFragment extends Fragment {
 
         price.setText(pl);
         address.setText(getTheThing("formatted_address"));
-        phno.setText(getTheThing("formatted_phone_number"));
+        phno.setText(getTheThing("international_phone_number"));
 
-        rt.setRating(Float.parseFloat(getTheThing("rating")));
+        if(!getTheThing("rating").matches(""))
+            rt.setRating(Float.parseFloat(getTheThing("rating")));
 
         gp.setText(getTheThing("url"));
 

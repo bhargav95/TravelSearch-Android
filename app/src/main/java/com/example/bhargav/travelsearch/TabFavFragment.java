@@ -28,13 +28,23 @@ import java.util.Map;
 public class TabFavFragment extends Fragment {
     private static final String TAG = "Tab2Fragment";
     MyFavViewAdapter adapter;
+    private static View view;
 
     private Button btnTEST;
+
+    public static void showNo(){
+
+        TextView fav = TabFavFragment.view.findViewById(R.id.noFavTextView);
+
+        fav.setVisibility(View.VISIBLE);
+        fav.setText("No favorites");
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tab2_fragment,container,false);
+        view = inflater.inflate(R.layout.tab2_fragment,container,false);
 
 
         return view;
@@ -69,7 +79,7 @@ public class TabFavFragment extends Fragment {
 
         }
 
-        TextView nofavtext =getView().findViewById(R.id.textViewFav);
+        TextView nofavtext =getView().findViewById(R.id.noFavTextView);
         if(nofavs==true){
             nofavtext.setText("No Favorites");
         }

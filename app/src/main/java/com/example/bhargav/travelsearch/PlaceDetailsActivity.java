@@ -50,6 +50,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsPlace);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.info_outline);
+        tabLayout.getTabAt(1).setIcon(R.drawable.photos);
+        tabLayout.getTabAt(2).setIcon(R.drawable.maps);
+        tabLayout.getTabAt(3).setIcon(R.drawable.review);
     }
 
     private void setupViewPager(ViewPager viewPager) {

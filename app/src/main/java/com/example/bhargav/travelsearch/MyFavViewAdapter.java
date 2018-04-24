@@ -115,6 +115,9 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
                         Toast.makeText(v.getContext(), placename+" removed from favorites",Toast.LENGTH_SHORT).show();
 
                         mData.remove(position);
+                        if(mData.length()==0){
+                            TabFavFragment.showNo();
+                        }
                         notifyDataSetChanged();
 
 

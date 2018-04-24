@@ -1,5 +1,7 @@
 package com.example.bhargav.travelsearch;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class TabReviewsFragment extends Fragment {
+public class TabReviewsFragment extends Fragment implements ReviewRecyclerViewAdapter.ItemClickListener {
 
     private ReviewRecyclerViewAdapter adapter;
     private JSONObject js;
@@ -145,7 +147,7 @@ public class TabReviewsFragment extends Fragment {
                             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             //adapter = new MyRecyclerViewAdapter(this, animalNames);
                             adapter = new ReviewRecyclerViewAdapter(reviews, false);
-
+                            adapter.setClickListener(TabReviewsFragment.this);
                             recyclerView.setAdapter(adapter);
 
                         } catch (JSONException e) {
@@ -278,6 +280,7 @@ public class TabReviewsFragment extends Fragment {
                 else
                     adapter = new ReviewRecyclerViewAdapter(newreviews2, false);
 
+                adapter.setClickListener(TabReviewsFragment.this);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -306,7 +309,7 @@ public class TabReviewsFragment extends Fragment {
                     adapter = new ReviewRecyclerViewAdapter(yelpnewreviews2, true);
                 else
                     adapter = new ReviewRecyclerViewAdapter(newreviews2, false);
-
+                adapter.setClickListener(TabReviewsFragment.this);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -320,4 +323,34 @@ public class TabReviewsFragment extends Fragment {
         return vv;
     }
 
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+        JSONObject js = adapter.getItem(position);
+
+        //Log.d("urlTag",js.toString());
+
+        String url="";
+
+        if(!isYelp){
+            try {
+                url = js.get("author_url").toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                url = js.get("url").toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Log.d("urlTag","url:"+url);
+
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
 }

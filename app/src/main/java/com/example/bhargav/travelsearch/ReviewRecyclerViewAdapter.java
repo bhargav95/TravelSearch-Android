@@ -16,6 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ViewHolder> {
 
     private JSONArray mData= new JSONArray();
@@ -93,7 +96,16 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         }
         else{
             holder.nameTextView.setText(getanimal(animal,"author_name"));
-            holder.dateTextView.setText(getanimal(animal,"time"));
+
+            Long sec = Long.parseLong(getanimal(animal,"time"));
+            Date date = new java.util.Date(sec*1000L);
+            // the format of your date
+            SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // give a timezone reference for formatting (see comment at the bottom)
+            sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+0"));
+            String formattedDate = sdf.format(date);
+
+            holder.dateTextView.setText(formattedDate);
             holder.reviewTextView.setText(getanimal(animal,"text"));
             holder.reviewRatingBar.setRating(Float.parseFloat(getanimal(animal,"rating")));
             //holder.myImageView=new LoaderImageView((animal.get("icon")));

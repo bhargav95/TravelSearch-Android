@@ -112,7 +112,7 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin=";
 
-        AutoCompleteTextView dirloc = vv.findViewById(R.id.directionAutoCompleteTextView2);
+        final AutoCompleteTextView dirloc = vv.findViewById(R.id.directionAutoCompleteTextView2);
         String origin = dirloc.getText().toString();
 
         if(origin.matches(""))
@@ -154,7 +154,8 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
                             if(dest!=null)
                                 dest.remove();
                             dest = mp.addMarker(new MarkerOptions().position(delhi)
-                                    .title(js.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).get("start_address").toString()));
+                                    .title(dirloc.getText().toString()));
+                                    //.title(js.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).get("start_address").toString()));
 
                             displaydirections(paths);
 

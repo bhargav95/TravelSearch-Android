@@ -373,6 +373,10 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
             error2.setVisibility(View.GONE);
         }
 
+        if(flag){
+            Toast.makeText(getActivity(),"Please fix all fields with errors", Toast.LENGTH_SHORT).show();
+        }
+
         return !flag;
 
     }

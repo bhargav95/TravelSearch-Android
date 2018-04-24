@@ -297,7 +297,8 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=" + place_id;
+        String url = "http://my-cloned-env.us-west-1.elasticbeanstalk.com/placeinfo?placeid=" + place_id;
+        //String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=" + place_id;
 
         Log.d("myTag", url);
 
