@@ -3,6 +3,7 @@ package com.example.bhargav.travelsearch;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        this.mData = data;
 //    }
 
-    MyRecyclerViewAdapter(Context context, JSONArray data){
+    MyRecyclerViewAdapter(Context context, JSONArray data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData =  data;
+        this.mData = data;
         this.context = context;
 
         this.setHasStableIds(true);
@@ -44,11 +45,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
 
-        sharedPref = view.getContext().getSharedPreferences("Favs",Context.MODE_PRIVATE);
+        sharedPref = view.getContext().getSharedPreferences("Favs", Context.MODE_PRIVATE);
         return new ViewHolder(view);
     }
 
-    private JSONObject getobj(int pos){
+    private JSONObject getobj(int pos) {
         try {
             return mData.getJSONObject(pos);
         } catch (JSONException e) {
@@ -58,7 +59,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return null;
     }
 
-    private String getanimal(JSONObject a, String key){
+    private String getanimal(JSONObject a, String key) {
 
         try {
             return a.get(key).toString();
@@ -74,26 +75,25 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final JSONObject animal = getobj(position);
-        final String placeid = getanimal(animal,"place_id");
-        final String placename = getanimal(animal,"name");
+        final String placeid = getanimal(animal, "place_id");
+        final String placename = getanimal(animal, "name");
 
 
-        try{
+        try {
 
             holder.myTextView2.setText(animal.get("vicinity").toString());
             holder.myTextView1.setText(animal.get("name").toString());
             //holder.myImageView=new LoaderImageView((animal.get("icon")));
             Picasso.with(context).load(animal.get("icon").toString()).into(holder.myImageView);
 
-            if(sharedPref.contains(animal.get("place_id").toString())){
+            if (sharedPref.contains(animal.get("place_id").toString())) {
                 holder.favicon.setImageResource(R.drawable.heart_fill_red);
-                holder.favicon.setTag(1);
+
+            } else {
+                holder.favicon.setImageResource(R.drawable.heart_outline_black);
+
             }
-            else{
-                holder.favicon.setTag(0);
-            }
-        }
-        catch(JSONException e){
+        } catch (JSONException e) {
 
             e.printStackTrace();
         }
@@ -103,29 +103,30 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     @Override
                     public void onClick(View v) {
 
-                        if(Integer.parseInt(holder.favicon.getTag().toString())==0)
-                        {
+                        Log.d("myTag", String.valueOf(sharedPref.getString(placeid, "not found")));
+
+                        if (sharedPref.getString(placeid, "").matches("")) {
 
                             SharedPreferences.Editor editor = sharedPref.edit();
 
-                            editor.putString(placeid,animal.toString());
+                            editor.putString(placeid, animal.toString());
                             editor.commit();
 
                             holder.favicon.setImageResource(R.drawable.heart_fill_red);
-                            holder.favicon.setTag(1);
 
-                            Toast.makeText(v.getContext(), placename+" added to favorites",Toast.LENGTH_SHORT).show();
 
-                        }
-                        else
-                        {
+                            Toast.makeText(v.getContext(), placename + " added to favorites", Toast.LENGTH_SHORT).show();
+
+                        } else {
                             SharedPreferences.Editor editor = sharedPref.edit();
                             editor.remove(placeid);
                             editor.commit();
                             holder.favicon.setImageResource(R.drawable.heart_outline_black);
-                            holder.favicon.setTag(0);
 
-                            Toast.makeText(v.getContext(), placename+" removed from favorites",Toast.LENGTH_SHORT).show();
+
+                            ResultsActivity.adapter.notifyDataSetChanged();
+
+                            Toast.makeText(v.getContext(), placename + " removed from favorites", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -164,10 +165,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     // convenience method for getting data at click position
     public JSONObject getItem(int id) {
-        try{
+        try {
             return mData.getJSONObject(id);
-        }
-        catch(JSONException e){
+        } catch (JSONException e) {
             return new JSONObject();
         }
     }

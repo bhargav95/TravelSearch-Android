@@ -65,6 +65,11 @@ public class TabPhotosFragment extends Fragment {
 
                         Log.d("myTag", "number of photos "+photoMetadataBuffer.getCount());
 
+                        if(photoMetadataBuffer.getCount()==0){
+                            vv.findViewById(R.id.noPhotosTextView).setVisibility(View.VISIBLE);
+                        }
+
+
                         int count=0;
                         for(PlacePhotoMetadata photoMetadata : photoMetadataBuffer){
                             photosDataList.add(photoMetadataBuffer.get(count).freeze());

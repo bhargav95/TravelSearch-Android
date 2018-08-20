@@ -1,6 +1,7 @@
 package com.example.bhargav.travelsearch;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,7 +55,7 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
     private LatLng ne,sw;
     private SupportMapFragment mapFragment;
     GoogleMap mp;
-    Marker dest;
+    Marker dest,sourcemarker;
     private String locationhere;
     private String locationfrom;
     private List<Polyline> pyls = new ArrayList<Polyline>();
@@ -106,7 +109,7 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         return polylines;
     }
 
-    public void setdirections(View vv, int position){
+    public void setdirections(final View vv, int position){
         Log.d("myTag",Integer.toString(position));
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -155,7 +158,16 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
                                 dest.remove();
                             dest = mp.addMarker(new MarkerOptions().position(delhi)
                                     .title(dirloc.getText().toString()));
+                            dest.showInfoWindow();
                                     //.title(js.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).get("start_address").toString()));
+
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                            builder.include(sourcemarker.getPosition());
+                            builder.include(dest.getPosition());
+                            LatLngBounds bounds = builder.build();
+                            int padding = (int) (getResources().getDisplayMetrics().heightPixels * 0.10);
+                            mp.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,padding));
 
                             displaydirections(paths);
 
@@ -167,6 +179,9 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
 
                         } catch (JSONException e) {
                             Log.d("myTag", "h");
+
+                            pd.dismiss();
+                            Toast.makeText(vv.getContext(), "Error getting direction", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -175,6 +190,9 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("myTag","That didn't work!");
+
+                pd.dismiss();
+                Toast.makeText(vv.getContext(), "Error getting direction", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -253,6 +271,9 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
             public void onItemClick(AdapterView<?> parent, View arg1, int pos,
                                     long id) {
 
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(location.getWindowToken(), 0);
+
                 setdirections(vv, pos);
 
             }
@@ -287,8 +308,10 @@ public class TabMapFragment extends Fragment implements OnMapReadyCallback, Goog
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
         LatLng sydney = new LatLng(lat, lng);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title(locationhere)).showInfoWindow();
+        sourcemarker = googleMap.addMarker(new MarkerOptions().position(sydney)
+                .title(locationhere));
+
+        sourcemarker.showInfoWindow();
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,17));
         //googleMap.setLatLngBoundsForCameraTarget(llb);

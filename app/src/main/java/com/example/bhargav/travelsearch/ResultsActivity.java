@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -26,21 +27,28 @@ import java.util.ArrayList;
 
 public class ResultsActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
 
-    MyRecyclerViewAdapter adapter;
+    public static MyRecyclerViewAdapter adapter;
     public static final String PLACE_MESSAGE = "com.example.bhargav.travelsearch.PLACE_MESSAGE";
+    public static final String POSITION_MESSAGE = "com.example.bhargav.travelsearch.POSITION_MESSAGE";
     JSONArray message;
     JSONArray message1;
     JSONArray message2;
 
-    String token1="";
-    String token2="";
+    String token1 = "";
+    String token2 = "";
 
     int currentIndex;
 
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -57,12 +65,12 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
         Intent intent = getIntent();
         try {
             message = new JSONArray(intent.getStringExtra(TabSearchFragment.EXTRA_MESSAGE));
-            message1=null;
-            message2=null;
+            message1 = null;
+            message2 = null;
 
             token1 = intent.getStringExtra(TabSearchFragment.TOKEN_MESSAGE);
 
-            if(token1.matches("")){
+            if (token1.matches("")) {
 
                 findViewById(R.id.nextButton).setEnabled(false);
             }
@@ -79,6 +87,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
             animalNames.add("Horse");
 
             Button prev = findViewById(R.id.prevButton);
+            Button next = findViewById(R.id.nextButton);
             prev.setEnabled(false);
 
             // set up the RecyclerView
@@ -88,6 +97,15 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
             adapter = new MyRecyclerViewAdapter(this, message);
             adapter.setClickListener(this);
             recyclerView.setAdapter(adapter);
+
+            if (message.length() == 0) {
+                TextView nrtv = findViewById(R.id.noResultsTextView);
+
+                prev.setVisibility(View.GONE);
+                next.setVisibility(View.GONE);
+                nrtv.setVisibility(View.VISIBLE);
+            }
+
 
         } catch (JSONException e) {
 
@@ -100,11 +118,16 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
             @Override
             public void onClick(View v) {
 
-                JSONArray todo=null;
-                switch (currentIndex){
-                    case 0: return;
-                    case 1: todo=message; break;
-                    case 2: todo=message1; break;
+                JSONArray todo = null;
+                switch (currentIndex) {
+                    case 0:
+                        return;
+                    case 1:
+                        todo = message;
+                        break;
+                    case 2:
+                        todo = message1;
+                        break;
                 }
 
                 // set up the RecyclerView
@@ -117,7 +140,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                 currentIndex--;
 
-                if(currentIndex==0){
+                if (currentIndex == 0) {
                     prev.setEnabled(false);
                 }
 
@@ -128,7 +151,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
         next.setOnClickListener(new View.OnClickListener() {
 
-            public void setadapter(JSONArray msg, View v){
+            public void setadapter(JSONArray msg, View v) {
 
                 // set up the RecyclerView
                 RecyclerView recyclerView = findViewById(R.id.rvPlaces);
@@ -140,7 +163,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
             }
 
-            public JSONArray getnextpage(String token, final int pos, final View v){
+            public JSONArray getnextpage(String token, final int pos, final View v) {
 
                 final ProgressDialog pd = new ProgressDialog(v.getContext());
                 pd.setMessage("Fetching Next Page");
@@ -150,7 +173,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
                 RequestQueue queue = Volley.newRequestQueue(v.getContext());
 
                 //token = "CrQCJgEAACjy9l7hjb2PcpLUi2A9GERfLTbYX4YSO1hpvvWkJflpWG1J2cIudAcjvICeRdHovDY5_Xpj7hg0w6vZ-e8Zyc3Z2r03ds5FzyNccgigykNyj0TikDthcJ2YQ7GRwcqXGtRbhxj-A7AV2pSWZ7qdPGs2uljh3qJmJPr7ZHkJOr1dImIfVp6UypJENDSvdE-e3J-RFXTqN7V6vTDlF-nEhrgNAWLZG-0ZvrT22jVUVtsaZOJM_Fe_ZLmrGHd7V6TROs9xxM17OXGW7UKVx7FXx0Z77RC4MZ6kSKh_ORw1fb2fLf_CXZMN535USv0oYIeJ18lZosYVUYWLuGqpPidjHG6R7z2co9Fr8ez7Ae0F7iGVDqA1hs-AO7E3OYxTKbhK43gWRsAI3YX0dTd4FbFh7BISEEBnbLCVde1L9SKJx0CmWVYaFLLO178dbM6hmhaxAAlKZFTS9gBH";
-                String url = "http://node-express-env.am4vuh8cpm.us-west-1.elasticbeanstalk.com/getnextpage?pagetoken="+token;
+                String url = "http://node-express-env.am4vuh8cpm.us-west-1.elasticbeanstalk.com/getnextpage?pagetoken=" + token;
 
                 Log.d("myTag", url);
 
@@ -167,35 +190,34 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                                     JSONObject js = new JSONObject(response);
 
-                                    switch (pos){
+                                    switch (pos) {
                                         case 1:
-                                            try{
+                                            try {
                                                 token2 = js.getString("next_page_token");
-                                                Log.d("tokenTag",token2);
-                                            }
-                                            catch (JSONException e){
-                                                token2="";
+                                                Log.d("tokenTag", token2);
+                                            } catch (JSONException e) {
+                                                token2 = "";
                                                 next.setEnabled(false);
-                                                Log.d("tokenTag","error for page2");
+                                                Log.d("tokenTag", "error for page2");
                                             }
 
                                             break;
                                     }
 
-                                    switch (pos){
+                                    switch (pos) {
 
-                                        case 1:{
+                                        case 1: {
                                             message1 = js.getJSONArray("results");
                                             break;
                                         }
-                                        case 2:{
+                                        case 2: {
                                             message2 = js.getJSONArray("results");
                                             break;
                                         }
 
                                     }
 
-                                    setadapter(js.getJSONArray("results"),v);
+                                    setadapter(js.getJSONArray("results"), v);
 
                                     pd.dismiss();
 
@@ -204,7 +226,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
                                     Log.d("myTag", "h");
 
                                     pd.dismiss();
-                                    Toast.makeText(v.getContext(),"Next page not yet generated by Google", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(v.getContext(), "Next page not yet generated by Google", Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -213,6 +235,9 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        pd.dismiss();
+                        Toast.makeText(v.getContext(), "Error in obtaining next page, try again", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -228,26 +253,25 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                 JSONArray setmsg;
                 String tk;
-                switch (currentIndex){
+                switch (currentIndex) {
 
-                    case 0:{
+                    case 0: {
 
-                        if(token1.matches("")){
+                        if (token1.matches("")) {
                             break;
                         }
 
-                        if(message1!=null){
-                            Log.d("tokenTag","using message1 previously stored");
-                            setadapter(message1,v);
+                        if (message1 != null) {
+                            Log.d("tokenTag", "using message1 previously stored");
+                            setadapter(message1, v);
 
-                            if(token2.matches("")){
+                            if (token2.matches("")) {
                                 next.setEnabled(false);
                             }
 
-                        }
-                        else{
-                            Log.d("tokenTag","getting message1");
-                            getnextpage(token1,1,v);
+                        } else {
+                            Log.d("tokenTag", "getting message1");
+                            getnextpage(token1, 1, v);
                         }
 
 
@@ -260,20 +284,19 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                     case 1: {
 
-                        Log.d("tokenTag","go to message2");
+                        Log.d("tokenTag", "go to message2");
 
-                        if(token2.matches("")){
-                            Log.d("tokenTag","no token2");
+                        if (token2.matches("")) {
+                            Log.d("tokenTag", "no token2");
                             break;
                         }
 
-                        if(message2!=null){
-                            Log.d("tokenTag","using message2 previously stored");
-                            setadapter(message2,v);
-                        }
-                        else{
-                            Log.d("tokenTag","getting message2");
-                            getnextpage(token2,2,v);
+                        if (message2 != null) {
+                            Log.d("tokenTag", "using message2 previously stored");
+                            setadapter(message2, v);
+                        } else {
+                            Log.d("tokenTag", "getting message2");
+                            getnextpage(token2, 2, v);
                         }
 
                         next.setEnabled(false);
@@ -292,7 +315,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
     }
 
     @Override
-    public void onItemClick(View view, final int position) {
+    public void onItemClick(final View view, final int position) {
 
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("Fetching Place Info");
@@ -327,6 +350,7 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                             Intent intent = new Intent(ResultsActivity.this, PlaceDetailsActivity.class);
                             intent.putExtra(PLACE_MESSAGE, js.toString());
+                            intent.putExtra(POSITION_MESSAGE, String.valueOf(position));
                             startActivity(intent);
 
                             pd.dismiss();
@@ -334,6 +358,9 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
 
                         } catch (JSONException e) {
                             Log.d("myTag", "h");
+
+                            pd.dismiss();
+                            Toast.makeText(view.getContext(), "Error getting place info, try again", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -341,7 +368,8 @@ public class ResultsActivity extends AppCompatActivity implements MyRecyclerView
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                pd.dismiss();
+                Toast.makeText(view.getContext(), "Error getting place info, try again", Toast.LENGTH_SHORT).show();
             }
         });
 

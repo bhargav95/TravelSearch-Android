@@ -33,9 +33,9 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
 //        this.mData = data;
 //    }
 
-    MyFavViewAdapter(Context context, JSONArray data){
+    MyFavViewAdapter(Context context, JSONArray data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData =  data;
+        this.mData = data;
         this.context = context;
 
         this.setHasStableIds(true);
@@ -46,11 +46,11 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
 
-        sharedPref = view.getContext().getSharedPreferences("Favs",Context.MODE_PRIVATE);
+        sharedPref = view.getContext().getSharedPreferences("Favs", Context.MODE_PRIVATE);
         return new ViewHolder(view);
     }
 
-    private JSONObject getobj(int pos){
+    private JSONObject getobj(int pos) {
         try {
             return mData.getJSONObject(pos);
         } catch (JSONException e) {
@@ -60,7 +60,7 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
         return null;
     }
 
-    private String getanimal(JSONObject a, String key){
+    private String getanimal(JSONObject a, String key) {
 
         try {
             return a.get(key).toString();
@@ -76,26 +76,24 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final JSONObject animal = getobj(position);
-        final String placeid = getanimal(animal,"place_id");
-        final String placename = getanimal(animal,"name");
+        final String placeid = getanimal(animal, "place_id");
+        final String placename = getanimal(animal, "name");
 
 
-        try{
+        try {
 
             holder.myTextView2.setText(animal.get("vicinity").toString());
             holder.myTextView1.setText(animal.get("name").toString());
             //holder.myImageView=new LoaderImageView((animal.get("icon")));
             Picasso.with(context).load(animal.get("icon").toString()).into(holder.myImageView);
 
-            if(sharedPref.contains(animal.get("place_id").toString())){
+            if (sharedPref.contains(animal.get("place_id").toString())) {
                 holder.favicon.setImageResource(R.drawable.heart_fill_red);
-                holder.favicon.setTag(1);
+
+            } else {
+
             }
-            else{
-                holder.favicon.setTag(0);
-            }
-        }
-        catch(JSONException e){
+        } catch (JSONException e) {
 
             e.printStackTrace();
         }
@@ -110,12 +108,11 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
                         editor.remove(placeid);
                         editor.commit();
                         holder.favicon.setImageResource(R.drawable.heart_outline_black);
-                        holder.favicon.setTag(0);
 
-                        Toast.makeText(v.getContext(), placename+" removed from favorites",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), placename + " removed from favorites", Toast.LENGTH_SHORT).show();
 
                         mData.remove(position);
-                        if(mData.length()==0){
+                        if (mData.length() == 0) {
                             TabFavFragment.showNo();
                         }
                         notifyDataSetChanged();
@@ -156,17 +153,11 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
 
     // convenience method for getting data at click position
     public JSONObject getItem(int id) {
-        try{
+        try {
             return mData.getJSONObject(id);
-        }
-        catch(JSONException e){
+        } catch (JSONException e) {
             return new JSONObject();
         }
-    }
-
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
     }
 
     @Override
@@ -177,6 +168,11 @@ public class MyFavViewAdapter extends RecyclerView.Adapter<MyFavViewAdapter.View
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    // allows clicks events to be caught
+    void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
     }
 
     // parent activity will implement this method to respond to click events

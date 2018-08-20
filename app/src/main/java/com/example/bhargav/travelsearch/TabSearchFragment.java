@@ -83,7 +83,7 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
         //assign onClick
         Button s = view.findViewById(R.id.searchButton);
-        s.setOnClickListener(new View.OnClickListener(){
+        s.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 if (!validate()) {
@@ -157,10 +157,9 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
                                     String npt = "";
 
-                                    try{
+                                    try {
                                         npt = js.getString("next_page_token");
-                                    }
-                                    catch (JSONException e){
+                                    } catch (JSONException e) {
                                         Log.d("myTag", "one pager");
                                     }
                                     intent.putExtra(TOKEN_MESSAGE, npt);
@@ -171,6 +170,9 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
                                 } catch (JSONException e) {
                                     Log.d("myTag", "h");
+
+                                    pd.dismiss();
+                                    Toast.makeText(view.getContext(), "Network Error, please try again", Toast.LENGTH_SHORT).show();
                                 }
 
 
@@ -178,7 +180,11 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mTextView.setText("That didn't work!");
+
+                        pd.dismiss();
+                        Toast.makeText(view.getContext(), "Network Error, please try again", Toast.LENGTH_SHORT).show();
+
+                        //mTextView.setText("That didn't work!");
                     }
                 });
 
@@ -230,16 +236,16 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
-        if(off==0){
+        if (off == 0) {
             Intent onGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(onGPS);
         }
 
 
-        location =view.findViewById(R.id.autoCompleteTextView);
+        location = view.findViewById(R.id.autoCompleteTextView);
 
-        latituteField = (TextView)view.findViewById(R.id.TextView02);
-        longitudeField = (TextView)view.findViewById(R.id.TextView04);
+        latituteField = (TextView) view.findViewById(R.id.TextView02);
+        longitudeField = (TextView) view.findViewById(R.id.TextView04);
 
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -253,11 +259,11 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
 
-        Log.d("myTag",provider);
+        //Log.d("myTag",provider);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            Log.d("myTag","permission not set");
+            Log.d("myTag", "permission not set");
 
             ActivityCompat.requestPermissions(getActivity(),
                     permissions,
@@ -292,13 +298,13 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
         // Initialize the location fields
         if (locationl != null) {
 
-            Log.d("myTag","if");
+            Log.d("myTag", "if");
 
             System.out.println("Provider " + provider + " has been selected.");
             onLocationChanged(locationl);
         } else {
 
-            Log.d("myTag","else");
+            Log.d("myTag", "else");
 
             latituteField.setText("Location not available");
             longitudeField.setText("Location not available");
@@ -316,13 +322,13 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
 
         location.setAdapter(aPlaceAdapter);
 
-        RadioGroup rgroup = (RadioGroup)view.findViewById(R.id.LocationRadioGroup);
+        RadioGroup rgroup = (RadioGroup) view.findViewById(R.id.LocationRadioGroup);
 
         rgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
 
-                AutoCompleteTextView actv =view.findViewById(R.id.autoCompleteTextView);
+                AutoCompleteTextView actv = view.findViewById(R.id.autoCompleteTextView);
 
                 switch (checkedId) {
                     case R.id.radioButton2:
@@ -373,8 +379,8 @@ public class TabSearchFragment extends Fragment implements GoogleApiClient.OnCon
             error2.setVisibility(View.GONE);
         }
 
-        if(flag){
-            Toast.makeText(getActivity(),"Please fix all fields with errors", Toast.LENGTH_SHORT).show();
+        if (flag) {
+            Toast.makeText(getActivity(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
         }
 
         return !flag;

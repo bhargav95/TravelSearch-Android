@@ -23,7 +23,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="64dp"
-        android:lines="2"
         android:text="abcd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:autoLink="phone"
         android:text="abcd"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,10 +45,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="16dp"
         android:text="Phone Number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/addrTextView" />
 
     <TextView
         android:id="@+id/dollarTextView"
@@ -71,7 +70,7 @@
         android:layout_marginTop="16dp"
         android:text="Price Level"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/phnoTextView" />
 
     <TextView
         android:id="@+id/pageTextView"
@@ -82,7 +81,7 @@
         android:layout_marginTop="16dp"
         android:text="Google Page"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/infoRatingBar" />
 
     <TextView
         android:id="@+id/gpTextView"
@@ -92,7 +91,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:autoLink="web"
-        android:lines="3"
         android:text="abcd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoRatingBar" />
@@ -106,7 +104,7 @@
         android:layout_marginTop="16dp"
         android:text="Rating"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/dollarTextView" />
 
     <RatingBar
         android:id="@+id/infoRatingBar"
@@ -127,10 +125,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="16dp"
         android:text="Website"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pageTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/gpTextView" />
 
 
     <TextView
@@ -141,7 +139,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:autoLink="web"
-        android:lines="3"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gpTextView" />

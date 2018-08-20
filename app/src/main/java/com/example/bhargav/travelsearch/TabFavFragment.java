@@ -1,6 +1,8 @@
 package com.example.bhargav.travelsearch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,10 +35,12 @@ import java.util.Map;
  * Created by User on 2/28/2017.
  */
 
-public class TabFavFragment extends Fragment {
+public class TabFavFragment extends Fragment implements MyFavViewAdapter.ItemClickListener{
     private static final String TAG = "Tab2Fragment";
-    MyFavViewAdapter adapter;
+    public static MyFavViewAdapter adapter;
     private static View view;
+    public static final String PLACE_MESSAGE = "com.example.bhargav.travelsearch.PLACE_MESSAGE";
+    public static final String POSITION_MESSAGE = "com.example.bhargav.travelsearch.POSITION_MESSAGE";
 
     private Button btnTEST;
 
@@ -101,8 +113,74 @@ public class TabFavFragment extends Fragment {
         //adapter = new MyRecyclerViewAdapter(this, animalNames);
         adapter = new MyFavViewAdapter(getContext(), message);
 
-        //adapter.setClickListener(this);
+        adapter.setClickListener(this);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClick(final View view, final int position) {
+
+        final ProgressDialog pd = new ProgressDialog(getActivity());
+        pd.setMessage("Fetching Place Info");
+        pd.show();
+
+        String place_id = "";
+        try {
+            place_id = adapter.getItem(position).get("place_id").toString();
+
+            Log.d("myTag",place_id);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        String url = "http://my-cloned-env.us-west-1.elasticbeanstalk.com/placeinfo?placeid=" + place_id;
+        //String url = "http://my-cloned-env-vasuki.us-west-2.elasticbeanstalk.com/placedetails?placeid=" + place_id;
+
+        Log.d("myTag", url);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d("myTag", "done");
+
+                        try {
+
+
+                            JSONObject js = new JSONObject(response);
+
+                            Intent intent = new Intent(view.getContext(), PlaceDetailsActivity.class);
+                            intent.putExtra(PLACE_MESSAGE, js.toString());
+                            intent.putExtra(POSITION_MESSAGE, String.valueOf(position));
+                            startActivity(intent);
+
+                            pd.dismiss();
+
+
+                        } catch (JSONException e) {
+                            Log.d("myTag", "h");
+
+                            pd.dismiss();
+                            Toast.makeText(view.getContext(), "Error getting place info, please try again", Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                pd.dismiss();
+                Toast.makeText(view.getContext(), "Network Error, please try again", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        queue.add(stringRequest);
     }
 }
